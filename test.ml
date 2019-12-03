@@ -65,9 +65,19 @@ let bst_test = [
 
 (* Add tests here as you write them! *)
 
+
 let suite =
   "suite">:::
-  oom @ gc_tests @ bst_test
+  oom @ gc_tests @ bst_test @ [
+
+
+  tgc_main "first" 10 "(data Point (Num Num)) (data PLink (Point PLink)) (let ((p1 (Point 4 5)) (p2 (PLink p1 (null PLink)))) p2)" "0";
+
+  tgc_main "checkpoint" 10000 "(data List (Num Bool)) (data Linked (List List Linked)) (let ((l1 (List 1 true)) (l2 (List 2 false)) (lnk1 (Linked l1 l2 (null Linked)))) lnk1)" "0";   
+
+
+
+]
 
 let () =
   run_test_tt_main suite

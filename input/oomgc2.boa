@@ -1,0 +1,3 @@
+(data tup (Num Num))
+(data tt (Num tup))
+(tt 1 (tup 3 4))

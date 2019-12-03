@@ -1,0 +1,1 @@
+(data List (Num Bool)) (data Linked (List List Linked)) (let ((l1 (List 1 true)) (l2 (List 2 false)) (lnk1 (Linked l1 l2 (null Linked)))) lnk1)

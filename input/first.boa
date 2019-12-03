@@ -1,0 +1,1 @@
+(data Point (Num Num)) (data PLink (Point PLink)) (let ((p1 (Point 4 5)) (p2 (PLink p1 (null PLink)))) p2)

@@ -1,0 +1,7 @@
+(data tup (Num Num))
+(data tt (Num tup))
+(let ((t (tup 1 2)))
+       (set t (tup 3 4))
+       (set t (tup 5 6))
+       (set t (tup 7 8))
+       t)

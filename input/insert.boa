@@ -1,0 +1,65 @@
+(data Link (Num Link))
+(data KV (Num Num))
+(data Node (KV Node Node))
+
+(def node      (k : Num v : Num) : Node (Node (KV k v) (null Node) (null Node)))
+(def getKeyVal (n : Node)        : KV   (get n 0))
+(def getKey    (n : Node)        : Num  (get (getKeyVal n) 0))
+(def getVal    (n : Node)        : Num  (get (getKeyVal n) 1))
+(def getLeft   (n : Node)        : Node (get n 1))
+(def getRight  (n : Node)        : Node (get n 2))
+(def isNull    (n : Node)        : Bool (if (== n (null Node)) true false))
+
+(def insert (n : Node k : Num v : Num) : Node
+	 (if (isNull n)
+		 (node k v)
+	     (if (> k (getKey n))
+		     (Node (getKeyVal n) (getLeft n)              (insert (getRight n) k v))
+		     (Node (getKeyVal n) (insert (getLeft n) k v) (getRight n)))))
+
+(def lookup (n : Node k : Num) : Num
+	 (if (isNull n)
+		 0
+	     (if (== k (getKey n))
+			 (getVal n)
+		     (if (> k (getKey n))
+				 (lookup (getRight n) k)
+			     (lookup (getLeft n) k)))))
+
+(def height (n : Node) : Num
+	 (if (isNull n)
+		 0
+	     (let ((lHeight (+ 1 (height (getLeft n)))) (rHeight (+ 1 (height (getRight n)))))
+		   (if (> lHeight rHeight) lHeight rHeight))))
+
+(def size (n : Node) : Num
+	 (if (isNull n)
+		 0
+	     (+ 1 (+ (size (getLeft n)) (size (getRight n))))))
+
+(def inorderKeysH (n : Node l : Link) : Link
+	 (if (isNull n)
+		 l
+	   (if (isNull (getRight n))
+		   (inorderKeysH (getLeft n) (Link (getKey n) l))
+		   (inorderKeysH (getLeft n) (Link (getKey n) (inorderKeysH (getRight n) l))))))
+
+(def inorderKeys (n : Node) : Link (inorderKeysH n (null Link)))
+
+(def reverseBst (n : Node nn : Node) : Node
+	 (if (isNull (getLeft n))
+		 (if (isNull (getRight n))
+			 (insert nn (getVal n) (getKey n))
+		   (let ((rn (reverseBst (getRight n) nn)))
+			 (insert rn (getVal n) (getKey n))))
+	   (if (isNull (getRight n))
+		   (let ((ln (reverseBst (getLeft n) nn)))
+			 (insert ln (getVal n) (getKey n)))
+		   (let ((ln (reverseBst (getLeft n) nn)) (rn (reverseBst (getRight n) ln)))
+		     (insert rn (getVal n) (getKey n))))))
+
+(def inorderValues (n : Node) : Link
+	 (if (isNull n)
+		 (null Link)
+	     (inorderKeys (reverseBst n (null Node)))))
+(insert (insert (null Node) 5 4) 6 7)
