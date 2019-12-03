@@ -109,6 +109,8 @@ int64_t* compact(int64_t* move_from, int64_t* move_to, int64_t* max_add){
 		//if heap obj is marked
 	    if((((Data*)(*obj))->gc_metadata != 0) && ((((Data*)(*obj))->gc_metadata) == 1)){
 
+			size_from = ((Data*)(*obj))->size;
+			
 			((Data*)(*obj_to))->gc_metadata = 0;
 			((Data*)(*obj_to))->size = ((Data*)(*obj))->size;
 			((Data*)(*obj_to))->name = ((Data*)(*obj))->name;
@@ -116,10 +118,10 @@ int64_t* compact(int64_t* move_from, int64_t* move_to, int64_t* max_add){
 				((Data*)(*obj_to))->elements[i] = ((Data*)(*obj))->elements[i];
 			}
 			//move to pointer to next space
-			size_from = ((Data*)(*obj))->size;
+			obj += size_from + 3;
+			
 			obj_to += size_from + 3; 
 	
-			obj += size_from + 3;
 	
 		}
 		else{
