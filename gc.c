@@ -179,7 +179,7 @@ int64_t* gc(int64_t* stack_bottom,
 	//check references to the stack for heap objects
 	while(first_frame > stack_top){
 		//check if value in stack is a number address
-		if((first_frame != NULL) && ((*first_frame & 7L) == 0)){
+		if((first_frame != 0) && ((*first_frame & 7L) == 0)){
 			max_add = (int64_t*)(*first_frame);
 			mark_heap(*first_frame);
 		}
