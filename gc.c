@@ -50,7 +50,8 @@ void forward1(int64_t* move_from, int64_t* move_to, int64_t* max_add){
 	int size_from;
 
 	//loop for heap
-	while(obj < max){
+	while(obj <= max){
+
 		//if heap obj is marked
 	    if((obj != 0) && (obj_to != 0) && (((Data*)(obj))->gc_metadata == 1)){
 			//tag on forward address number to gc 
@@ -75,13 +76,13 @@ void forward2(int64_t* heap_start, int64_t* max){
 	Data* newObj;
 
 	//loop through heap
-	while(start < max_add){
+	while(start <= max_add){
 		//check if marked obj
 		if((start != 0) && (((Data*)(start))->gc_metadata & LSB) == 1){
 			for(int i = 0; i < ((Data*)(start))->size; i++){
 				//check if elem is a reference to another obj
 				if( (((Data*)(((Data*)(start))->elements[i])) != 0) && (((Data*)(((Data*)(start))->elements[i]))->gc_metadata & 7L) == 0) {
-					//set new address to be original's first word with removed marked bit ------------------           & operator for element???
+					//set new address to be original's first word with removed marked bit 
 				 	newObj = (Data*)(((Data*)(start))->elements[i]);
 					((Data*)((Data*)(start))->elements[i])->gc_metadata = (newObj->gc_metadata) & TAG;
 				}
@@ -105,7 +106,7 @@ int64_t* compact(int64_t* move_from, int64_t* move_to, int64_t* stack, int64_t* 
 
 	fprintf(stderr, "obj_to is : %p\n", obj_to);
 	//loop for heap
-	while(obj < max){
+	while(obj <= max){
 		//if heap obj is marked
 
 	    if((obj != 0) && (obj_to != 0) && ((((Data*)(obj))->gc_metadata) == 1)){
