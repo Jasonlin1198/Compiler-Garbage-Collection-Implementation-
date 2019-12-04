@@ -81,10 +81,10 @@ void forward2(int64_t* heap_start, int64_t* max){
 		if((start != 0) && (((Data*)(start))->gc_metadata & LSB) == 1){
 			for(int i = 0; i < ((Data*)(start))->size; i++){
 				//check if elem is a reference to another obj
-				if( (((Data*)(((Data*)(start))->elements[i])) != 0) && (((Data*)(((Data*)(start))->elements[i]))->gc_metadata & 7L) == 0) {
+				if( (((((Data*)(start))->elements[i])) != 0) && (((((Data*)(start))->elements[i]) & 7L) == 0)) {
 					//set new address to be original's first word with removed marked bit 
 				 	newObj = (Data*)(((Data*)(start))->elements[i]);
-					((Data*)((Data*)(start))->elements[i])->gc_metadata = (newObj->gc_metadata) & TAG;
+					(((Data*)(start))->elements[i]) = (newObj->gc_metadata) & TAG;
 				}
 			}
 		}
@@ -100,17 +100,12 @@ int64_t* compact(int64_t* move_from, int64_t* move_to, int64_t* stack, int64_t* 
 	int64_t* obj_to = move_to;
 	int64_t* max = max_add;
 	int size_from;
-	int64_t* stack_copy = stack;
 
-	fprintf(stderr, "obj is : %p\n", obj);
-
-	fprintf(stderr, "obj_to is : %p\n", obj_to);
 	//loop for heap
 	while(obj <= max){
 		//if heap obj is marked
-
-	    if((obj != 0) && (obj_to != 0) && ((((Data*)(obj))->gc_metadata) == 1)){
-			size_from = ((Data*)(*obj))->size;
+	    if((obj != 0) && (obj_to != 0) && ((((Data*)(obj))->gc_metadata) & LSB == 1)){
+			size_from = ((Data*)(obj))->size;
 			//loop through stack		
 			while(stack > top){
 				//update stack references if stack obj address and heap address is the same
@@ -120,9 +115,6 @@ int64_t* compact(int64_t* move_from, int64_t* move_to, int64_t* stack, int64_t* 
 				}
 				stack--;
 			}
-			//reset bottom pointer
-			stack = stack_copy;
-			
 	
 			((Data*)(obj_to))->gc_metadata = 0;
 			((Data*)(obj_to))->size = ((Data*)(obj))->size;
@@ -180,7 +172,7 @@ int64_t* gc(int64_t* stack_bottom,
 	//check references to the stack for heap objects
 	while(first_frame > stack_top){
 		//check if value in stack is a number address
-		if((first_frame != 0) && ((*first_frame & 7L) == 0)){
+		if((*first_frame != 0) && ((*first_frame & 7L) == 0)){
 			max_add = (int64_t*)(*first_frame);
 			mark_heap(*first_frame);
 		}
