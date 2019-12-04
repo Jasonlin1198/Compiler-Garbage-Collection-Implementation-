@@ -80,7 +80,7 @@ void forward2(int64_t* heap_start, int64_t* max){
 		if((start != 0) && (((Data*)(start))->gc_metadata & LSB) == 1){
 			for(int i = 0; i < ((Data*)(start))->size; i++){
 				//check if elem is a reference to another obj
-				if(((((Data*)(((Data*)(start))->elements[i]))->gc_metadata & 7L) == 0) && (((Data*)(((Data*)(start))->elements[i]))->gc_metadata != 0)){
+				if(((((Data*)(((Data*)(start))->elements[i]))->gc_metadata & 7L) == 0) && (((Data*)(((Data*)(start))->elements[i])) != 0)){
 					//set new address to be original's first word with removed marked bit ------------------           & operator for element???
 				 	newObj = (Data*)(((Data*)(start))->elements[i]);
 					((Data*)((Data*)(start))->elements[i])->gc_metadata = (newObj->gc_metadata) & TAG;
